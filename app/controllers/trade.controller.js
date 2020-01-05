@@ -185,7 +185,7 @@ exports.update = (req, res) => {
                     // console.log(doc.averagePrice + " " + trade.price + " " + req.body.price);
 
                     var fShares = parseInt(doc.shares) - parseInt(trade.quantity) + parseInt(req.body.quantity);
-                    var fPrice = ((parseInt(doc.averagePrice) * parseInt(doc.shares)) - (parseInt(trade.quantity) * parseInt(trade.price)) + (parseInt(req.body.quantity) * parseInt(req.body.price))) / ((parseInt(doc.shares) - parseInt(trade.quantity) + parseInt(req.body.price)));
+                    var fPrice = ((parseInt(doc.averagePrice) * parseInt(doc.shares)) - (parseInt(trade.quantity) * parseInt(trade.price)) + (parseInt(req.body.quantity) * parseInt(req.body.price))) / ((parseInt(doc.shares) - parseInt(trade.quantity) + parseInt(req.body.quantity)));
                     
                     // console.log(fShares + " " + fPrice);
 
@@ -244,17 +244,24 @@ exports.delete = (req, res) => {
                     // console.log("Inside sell");
                     var fShares = parseInt(doc.shares) + parseInt(trade.quantity);
                     var fTrades = doc.trades;
-                    console.log(fTrades);
+                    // console.log(fTrades);
                     fTrades.splice(fTrades.indexOf(req.params.tradeId), 1);
+                    // console.log(fTrades);
 
-                    console.log(fTrades);
-                    Portfolio.findOneAndUpdate({"ticker": trade.ticker}, {"$set": {"shares": fShares, "trades": fTrades }}, {new:true}).exec(function(err, port){
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log("Portfolio Updated");
-                        }
-                    });
+                    if (parseInt(fShares) > 0) {
+                        Portfolio.findOneAndUpdate({"ticker": trade.ticker}, {"$set": {"shares": fShares, "trades": fTrades }}, {new:true}).exec(function(err, port){
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log("Portfolio Updated");
+                            }
+                        });
+                    } else {
+                        Portfolio.findOneAndRemove({"ticker": trade.ticker}, (err, done) => {
+                            if (err) console.log(err);
+                            else console.log("Deleted due to 0 shares.");
+                        });
+                    }
 
                 } else {
                     // console.log("Inside buy");
@@ -267,13 +274,21 @@ exports.delete = (req, res) => {
                     console.log(fTrades);
                     // console.log(fShares + " " + fPrice);
 
-                    Portfolio.findOneAndUpdate({"ticker": trade.ticker}, {"$set": {"shares": fShares, "averagePrice": fPrice, "trades": fTrades}}, {new:true}).exec(function(err, port){
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log("Portfolio Updated");
-                        }
-                    });
+                    if (parseInt(fShares) > 0) {
+                        Portfolio.findOneAndUpdate({"ticker": trade.ticker}, {"$set": {"shares": fShares, "averagePrice": fPrice, "trades": fTrades}}, {new:true}).exec(function(err, port){
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log("Portfolio Updated");
+                            }
+                        });
+                    } else {
+                        Portfolio.findOneAndRemove({"ticker": trade.ticker}, (err, done) => {
+                            if (err) console.log(err);
+                            else console.log("Deleted due to 0 shares.");
+                        });
+                    }
+                    
 
                 }
             }
