@@ -185,7 +185,7 @@ exports.update = (req, res) => {
                     // console.log(doc.averagePrice + " " + trade.price + " " + req.body.price);
 
                     var fShares = parseInt(doc.shares) - parseInt(trade.quantity) + parseInt(req.body.quantity);
-                    var fPrice = ((parseInt(doc.averagePrice) * parseInt(doc.shares)) - (parseInt(trade.quantity) * parseInt(trade.price)) + (parseInt(req.body.quantity) * parseInt(req.body.price))) / (parseInt(doc.shares) - parseInt(trade.quantity) + parseInt(req.body.price));
+                    var fPrice = ((parseInt(doc.averagePrice) * parseInt(doc.shares)) - (parseInt(trade.quantity) * parseInt(trade.price)) + (parseInt(req.body.quantity) * parseInt(req.body.price))) / ((parseInt(doc.shares) - parseInt(trade.quantity) + parseInt(req.body.price)));
                     
                     // console.log(fShares + " " + fPrice);
 
@@ -333,7 +333,7 @@ exports.returns = (req, res) => {
         trade.forEach(x => {
             const currPrice = 100;
             // console.log(currPrice + " " + x.averagePrice + " " + x.shares);
-            rets = (parseInt(currPrice) - parseInt(x.averagePrice))/parseInt(x.shares);
+            rets = (parseInt(currPrice) - parseInt(x.averagePrice))*parseInt(x.shares);
 
             const ret = new Returns({
                 ticker: x.ticker,
