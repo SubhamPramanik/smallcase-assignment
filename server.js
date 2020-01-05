@@ -26,8 +26,6 @@ mongoose.connect(dbConfig.url, {
     process.exit();
 });
 
-//TODO: Check for collections to store trades, holdings, portfolio
-
 // define a simple route
 app.get('/', (req, res) => {
     res.json({"message": "smallcase backend development intern assignment."});
@@ -36,7 +34,10 @@ app.get('/', (req, res) => {
 // Require trade routes
 require('./app/routes/trade.routes.js')(app);
 
+// Globals
+const PORT = process.env.PORT || 3000;
+
 // listen for requests
-app.listen(3000, () => {
-    console.log("Server is listening on port 3000");
+app.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
 });
