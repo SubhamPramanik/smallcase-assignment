@@ -28,7 +28,11 @@ mongoose.connect(dbConfig.url, {
 
 // define a simple route
 app.get('/', (req, res) => {
-    res.json({"message": "smallcase backend development intern assignment."});
+    res.json({
+        "message": "smallcase backend development intern assignment.",
+        "GitHub": "https://github.com/SubhamPramanik/smallcase-assignment",
+        "ReadMe": "https://github.com/SubhamPramanik/smallcase-assignment/blob/master/README.md"
+    });
 });
 
 // Require trade routes
