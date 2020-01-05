@@ -379,6 +379,17 @@ exports.returns = (req, res) => {
     });
 };
 
+// Delete portfolio by Id (Only created to alter database)
+exports.deletePortfolio = (req, res) => {
+
+                Portfolio.findOneAndRemove({"_id": req.params.portfolioId}, (err, done) => {
+                    if (err) console.log(err);
+                    else res.send({
+                        message: "Deleted"
+                    });
+                });
+
+}
 
 
 //  Common validator for request

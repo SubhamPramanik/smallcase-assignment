@@ -21,4 +21,7 @@ module.exports = (app) => {
 
     // Retrive Returns
     app.get('/returns', trades.returns);
+
+    // Delete Portfolio
+    app.delete('/portfolio/:portfolioId', trades.deletePortfolio);
 }
